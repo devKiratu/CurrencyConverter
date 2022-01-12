@@ -65,3 +65,10 @@ button {
 .historycard p {
 	padding: 0;
 }
+
+.history {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}

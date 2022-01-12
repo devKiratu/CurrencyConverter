@@ -5,17 +5,16 @@ export default function Converter() {
 	const [from, setFrom] = useState();
 	const [to, setTo] = useState();
 	const [amount, setAmount] = useState();
-	const [output, setOutput] = useState(0);
+	const [output, setOutput] = useState();
 
 	const requestBody = {
 		from,
 		to,
-		amount,
+		amount: parseInt(amount),
 	};
 
 	async function convert(e) {
 		e.preventDefault();
-		console.log(`requestobj: ${requestBody}`);
 		const response = await fetch("api/Conversions", {
 			method: "POST",
 			headers: {
@@ -25,6 +24,7 @@ export default function Converter() {
 		});
 
 		const data = await response.json();
+		setOutput(data.output);
 		console.log(data);
 	}
 
@@ -46,7 +46,11 @@ export default function Converter() {
 							</option>
 						))}
 					</select>
-					<input type="text" value={amount} onChange={() => setAmount()} />
+					<input
+						type="text"
+						value={amount}
+						onChange={(e) => setAmount(e.target.value)}
+					/>
 				</div>
 				<div>
 					<label>To</label>
@@ -64,7 +68,7 @@ export default function Converter() {
 						))}
 					</select>
 
-					<input type="text" value={output} />
+					<input type="text" value={output} readOnly />
 				</div>
 				<button type="submit">Convert</button>
 			</form>
