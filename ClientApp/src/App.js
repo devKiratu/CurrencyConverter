@@ -1,22 +1,21 @@
-import React, { Component } from 'react';
-import { Route } from 'react-router';
-import { Layout } from './components/Layout';
-import { Home } from './components/Home';
-import { FetchData } from './components/FetchData';
-import { Counter } from './components/Counter';
+import React from "react";
+import Converter from "./components/Converter";
+import History from "./components/History";
+import Navbar from "./components/Navbar";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import './custom.css'
-
-export default class App extends Component {
-  static displayName = App.name;
-
-  render () {
-    return (
-      <Layout>
-        <Route exact path='/' component={Home} />
-        <Route path='/counter' component={Counter} />
-        <Route path='/fetch-data' component={FetchData} />
-      </Layout>
-    );
-  }
+export default function App() {
+	return (
+		<Router>
+			<Navbar />
+			<Switch>
+				<Route path="/history">
+					<History />
+				</Route>
+				<Route path="/">
+					<Converter />
+				</Route>
+			</Switch>
+		</Router>
+	);
 }

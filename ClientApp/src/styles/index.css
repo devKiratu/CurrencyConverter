@@ -1,0 +1,54 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	/* text-align: center; */
+}
+
+/* Navbar */
+.nav {
+	margin: 0 auto;
+	width: 60vw;
+	height: 80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.nav a {
+	padding: 20px;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/* Converter */
+.converter {
+	width: 60%;
+	height: 70%;
+	margin: 0 auto;
+	border: 1px solid black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+input,
+label,
+select {
+	margin: 5px;
+	padding: 5px;
+}
+
+label {
+	width: 20px;
+	display: block;
+}
+
+button {
+	padding: 5px;
+	cursor: pointer;
+	outline: none;
+	width: 200px;
+	border-radius: 5px;
+	margin: 20px auto;
+}
