@@ -22,11 +22,12 @@
 }
 
 /* Converter */
-.converter {
+.converter,
+.history {
 	width: 60%;
 	height: 70%;
 	margin: 0 auto;
-	border: 1px solid black;
+	/* border: 1px solid black; */
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -51,4 +52,16 @@ button {
 	width: 200px;
 	border-radius: 5px;
 	margin: 20px auto;
+}
+
+.historycard {
+	width: 80%;
+	border: 1px solid gray;
+	margin: 10px;
+	border-radius: 10px;
+	padding: 25px;
+}
+
+.historycard p {
+	padding: 0;
 }

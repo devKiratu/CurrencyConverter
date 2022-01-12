@@ -1,7 +1,9 @@
+using CurrencyConverter.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +29,11 @@ namespace CurrencyConverter
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
+            });
+            services.AddHttpClient();
+            services.AddDbContext<MainDbContext>(o =>
+            {
+                o.UseSqlServer(Configuration.GetConnectionString("sqlserver"));
             });
         }
 
@@ -66,6 +73,13 @@ namespace CurrencyConverter
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+#if DEBUG
+            using var scope = app.ApplicationServices.CreateScope();
+            var provider = scope.ServiceProvider;
+            var dbContext = provider.GetRequiredService<MainDbContext>();
+            dbContext.Database.EnsureCreated();
+#endif
         }
     }
 }
