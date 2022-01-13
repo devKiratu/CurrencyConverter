@@ -6,7 +6,7 @@ export default function History() {
 	async function getHistory() {
 		const response = await fetch("api/Conversions/history", { method: "GET" });
 		const data = await response.json();
-		console.log(data);
+		// console.log(data.status);
 		setTransactions(data);
 	}
 	useEffect(() => {
@@ -15,7 +15,7 @@ export default function History() {
 
 	return (
 		<div className="history">
-			{transactions === undefined ? (
+			{transactions.status === 404 ? (
 				<p>No transactions yet</p>
 			) : (
 				transactions.map((t) => <HistoryCard transaction={t} key={t.id} />)

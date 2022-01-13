@@ -5,12 +5,9 @@ using System.Threading.Tasks;
 
 namespace CurrencyConverter.Models
 {
-    public class TransactionModel
+    public class TransactionModel : ConversionModel
     {
         public int Id { get; set; }
-        public string From { get; set; }
-        public string To { get; set; }
-        public float Amount { get; set; }
         public float Output { get; set; }
         public DateTimeOffset TransactedAt { get; set; }
     }

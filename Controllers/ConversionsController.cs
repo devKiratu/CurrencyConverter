@@ -16,18 +16,24 @@ namespace CurrencyConverter.Controllers
     {
         private readonly IHttpClientFactory httpClientFactory;
         private readonly MainDbContext dbContext;
+        private readonly IRatesProvider ratesProvider;
 
-        public ConversionsController(IHttpClientFactory httpClientFactory, MainDbContext dbContext )
+        public ConversionsController(IHttpClientFactory httpClientFactory, MainDbContext dbContext, IRatesProvider ratesProvider )
         {
             this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            this.ratesProvider = ratesProvider ?? throw new ArgumentNullException(nameof(ratesProvider));
         }
 
         [HttpPost]
         public async Task<IActionResult> ConvertAsync([FromBody] ConversionModel model)
         {
-            var conversionRate = await GetConversionRateAsync(model.From, model.To);
-            var output = conversionRate * model.Amount;
+            var output = Convert(model.From, model.To, model.Amount);
+
+            if(output == float.MinValue)
+            {
+                return BadRequest("Could not convert, please check your input and retry");
+            }
 
             var transaction = new TransactionModel
             {
@@ -58,25 +64,38 @@ namespace CurrencyConverter.Controllers
             return Ok(transactions);
         }
 
-        private async Task<float> GetConversionRateAsync(string from, string to)
+        private float Convert(string from, string to, float amount)
         {
-            float rate = 0;
-            var baseUrl = "https://free.currconv.com/api/v7/convert";
-            var query = $"q={from}_{to}&compact=ultra";
-            var apiKey = "2ee795613f5a7be338c9";
-            var url = $"{baseUrl}?{query}&apiKey={apiKey}";
+            var rates = ratesProvider.Rates;
 
-            var client = httpClientFactory.CreateClient();
-            HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, url));
-
-            if (response.IsSuccessStatusCode)
+            if(rates.TryGetValue(from, out float fromCurrency) && rates.TryGetValue(to, out float toCurrency))
             {
-                var amount = await response.Content.ReadAsStringAsync();
-                rate = float.Parse(amount.Substring(11, 9));
-
+                var output = amount * (toCurrency / fromCurrency);
+                return output;
             }
 
-            return rate;
+            return float.MinValue;
         }
+
+        //private async Task<float> GetConversionRateAsync(string from, string to)
+        //{
+        //    float rate = 0;
+        //    var baseUrl = "https://free.currconv.com/api/v7/convert";
+        //    var query = $"q={from}_{to}&compact=ultra";
+        //    var apiKey = "2ee795613f5a7be338c9";
+        //    var url = $"{baseUrl}?{query}&apiKey={apiKey}";
+
+        //    var client = httpClientFactory.CreateClient();
+        //    HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, url));
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var amount = await response.Content.ReadAsStringAsync();
+        //        rate = float.Parse(amount.Substring(11, 9));
+
+        //    }
+
+        //    return rate;
+        //}
     }
 }
