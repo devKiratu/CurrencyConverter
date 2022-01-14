@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import HistoryCard from "./HistoryCard";
 
 export default function History() {
 	const [transactions, setTransactions] = useState([]);
@@ -18,7 +17,30 @@ export default function History() {
 			{transactions.status === 404 ? (
 				<p>No transactions yet</p>
 			) : (
-				transactions.map((t) => <HistoryCard transaction={t} key={t.id} />)
+				<table className="history-table">
+					<thead>
+						<tr>
+							<th>Transaction Id</th>
+							<th>From</th>
+							<th>To</th>
+							<th>Amount</th>
+							<th>Output</th>
+							<th>Transaction Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						{transactions.map((t) => (
+							<tr key={t.id}>
+								<td>{t.id}</td>
+								<td>{t.from}</td>
+								<td>{t.to}</td>
+								<td>{t.amount}</td>
+								<td>{t.output}</td>
+								<td>{new Date(t.transactedAt).toLocaleString()}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
 			)}
 		</div>
 	);
