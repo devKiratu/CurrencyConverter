@@ -34,8 +34,8 @@ export default function History() {
 								<td>{t.id}</td>
 								<td>{t.from}</td>
 								<td>{t.to}</td>
-								<td>{t.amount}</td>
-								<td>{t.output}</td>
+								<td>{t.amount.toLocaleString("en")}</td>
+								<td>{t.output.toLocaleString("en")}</td>
 								<td>{new Date(t.transactedAt).toLocaleString()}</td>
 							</tr>
 						))}
