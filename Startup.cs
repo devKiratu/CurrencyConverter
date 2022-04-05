@@ -12,12 +12,14 @@ namespace CurrencyConverter
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            Env = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Env { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -33,7 +35,14 @@ namespace CurrencyConverter
             services.AddHttpClient();
             services.AddDbContext<MainDbContext>(o =>
             {
-                o.UseSqlServer(Configuration.GetConnectionString("sqlserver"));
+                if (Env.IsProduction())
+                {
+                    o.UseInMemoryDatabase("currencyconverter");
+                }
+                else
+                {
+                    o.UseSqlServer(Configuration.GetConnectionString("sqlserver"));
+                }
             });
             services.AddSingleton<IRatesProvider, RatesProvider>();
         }
