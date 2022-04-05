@@ -54,7 +54,7 @@ namespace CurrencyConverter.Controllers
         [HttpGet("history")]
         public async Task<IActionResult> GetHistory()
         {
-            var transactions = await dbContext.Transactions.ToListAsync();
+            var transactions = await dbContext.Transactions.OrderByDescending(t => t.TransactedAt).ToListAsync();
 
             if (transactions.Count == 0 )
             {
